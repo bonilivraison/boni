@@ -1,0 +1,265 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Logo from '../components/Logo.astro';
+
+const palette = [
+  { name: 'Latérite', hex: '#C8371E', role: "Couleur principale : boutons d'action, logo. La terre rouge des pistes.", ink: '#fff' },
+  { name: 'Or de Kankan', hex: '#F2B705', role: 'Accent : point de départ, surlignages, détails. Jamais en texte sur fond clair.', ink: '#0E1A24' },
+  { name: 'Vert Fouta', hex: '#0F6B3E', role: 'Confiance et succès : « livré », livreurs, validation.', ink: '#fff' },
+  { name: 'Nuit atlantique', hex: '#0E1A24', role: 'Texte principal, fonds sombres, bandeaux.', ink: '#F6EEDF' },
+  { name: 'Sable', hex: '#F6EEDF', role: 'Fond clair, chaleureux, jamais de blanc pur.', ink: '#0E1A24' },
+];
+const doList = [
+  'Vouvoyer, avec chaleur : « Dites-nous où vous êtes. »',
+  'Parler concret : départ, arrivée, prix, livreur.',
+  'Montrer plutôt que promettre : « le prix s\'affiche avant de confirmer ».',
+  'Ancrer dans Conakry par l\'image : la presqu\'île, l\'Atlantique, la moto, les motifs tissés.',
+];
+const dontList = [
+  'Annoncer un prix, un « à partir de » ou un délai chiffré.',
+  'Citer un moyen de paiement ou afficher un logo d\'opérateur sans contrat.',
+  'Promettre des zones ou « tout Conakry » avant la fin du pilote.',
+  'Parler d\'« emploi » ou de « salaire » aux livreurs, ou chiffrer leurs gains.',
+];
+---
+
+<Base title="Charte de marque" noindex>
+  <Header />
+  <main class="brand">
+    <section class="container brand__hero">
+      <p class="eyebrow">Charte de marque · v1</p>
+      <h1>BoniLivraison,<br />Conakry vibrante.</h1>
+      <p class="lead">
+        L'énergie des motos qui traversent la presqu'île, la latérite des pistes, l'or et le vert du pays : une marque fière
+        de sa ville, claire sur ce qu'elle promet.
+      </p>
+    </section>
+
+    <section class="container block">
+      <h2>Logo</h2>
+      <p class="lead">
+        Le monogramme est un « b » dessiné comme un trajet : le point or en haut, c'est le départ (A) ; le point au cœur de
+        la boucle, l'arrivée (B).
+      </p>
+      <div class="logos">
+        <div class="logos__tile logos__tile--sable"><Logo size={64} /></div>
+        <div class="logos__tile logos__tile--nuit"><Logo size={64} tone="light" /></div>
+        <div class="logos__tile logos__tile--or"><Logo size={96} variant="mark" /></div>
+        <div class="logos__tile logos__tile--laterite"><Logo size={56} tone="light" /></div>
+      </div>
+      <p class="hint">Zone de protection : la hauteur du point or autour du logo. Taille minimale : 24 px pour le monogramme.</p>
+    </section>
+
+    <section class="container block">
+      <h2>Couleurs</h2>
+      <div class="swatches">
+        {
+          palette.map((c) => (
+            <div class="swatch" style={`--c:${c.hex};--i:${c.ink}`}>
+              <div class="swatch__color">
+                <b>{c.name}</b>
+                <code>{c.hex}</code>
+              </div>
+              <p>{c.role}</p>
+            </div>
+          ))
+        }
+      </div>
+      <p class="hint">Proportions conseillées : 60 % sable ou nuit, 25 % latérite, 10 % vert, 5 % or.</p>
+    </section>
+
+    <section class="container block">
+      <h2>Typographie</h2>
+      <div class="type">
+        <div>
+          <p class="type__name">Bricolage Grotesque · 800</p>
+          <p class="type__display">De A à B.</p>
+          <p class="hint">Titres, slogans, chiffres d'étapes. Serrée, généreuse, un peu artisanale.</p>
+        </div>
+        <div>
+          <p class="type__name">Figtree · 400 à 700</p>
+          <p class="type__body">
+            Vous indiquez le départ et l'arrivée. Vous voyez le prix avant de confirmer. Vous suivez votre livreur sur la
+            carte.
+          </p>
+          <p class="hint">Textes courants, formulaires, interface de l'application.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="container block">
+      <h2>Motifs</h2>
+      <p class="lead">Inspirés des textiles tissés et teints d'Afrique de l'Ouest : chevrons, losanges, points.</p>
+      <div class="motifs">
+        <div class="weave"></div>
+        <div class="weave weave--laterite"></div>
+        <div class="motifs__tile motif-losanges"></div>
+      </div>
+    </section>
+
+    <section class="container block">
+      <h2>Ton de voix</h2>
+      <div class="voice">
+        <div class="voice__col voice__col--do">
+          <h3>On dit</h3>
+          <ul>{doList.map((d) => <li>{d}</li>)}</ul>
+        </div>
+        <div class="voice__col voice__col--dont">
+          <h3>On ne dit pas (avant le lancement)</h3>
+          <ul>{dontList.map((d) => <li>{d}</li>)}</ul>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .brand {
+    padding-bottom: 96px;
+  }
+  .brand__hero {
+    padding-block: clamp(40px, 7vw, 96px) 24px;
+  }
+  .brand__hero h1 {
+    font-size: clamp(2.8rem, 8vw, 6.4rem);
+    margin: 0.25em 0 0.35em;
+  }
+  .block {
+    padding-top: clamp(48px, 7vw, 88px);
+  }
+  .block h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 0.5em;
+  }
+  .hint {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-top: 14px;
+  }
+  .logos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+  }
+  .logos__tile {
+    display: grid;
+    place-items: center;
+    min-height: 180px;
+    border-radius: var(--radius-l);
+    border: 1px solid var(--line);
+  }
+  .logos__tile--sable {
+    background: #f6eedf;
+    --ink: #0e1a24;
+    --accent: #ae2d18;
+  }
+  .logos__tile--nuit {
+    background: var(--nuit);
+  }
+  .logos__tile--or {
+    background: var(--or);
+  }
+  .logos__tile--laterite {
+    background: var(--laterite);
+  }
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  .swatch__color {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 4px;
+    height: 170px;
+    padding: 18px;
+    border-radius: var(--radius-m);
+    background: var(--c);
+    color: var(--i);
+    border: 1px solid var(--line);
+  }
+  .swatch__color b {
+    font: 800 1.3rem/1 var(--font-display);
+  }
+  .swatch p {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+  }
+  .type {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .type__name {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .type__display {
+    font: 800 clamp(3.5rem, 9vw, 6rem) / 1 var(--font-display);
+    letter-spacing: -0.04em;
+    margin-top: 8px;
+  }
+  .type__body {
+    font-size: 1.3rem;
+    margin-top: 12px;
+  }
+  .motifs {
+    display: grid;
+    gap: 16px;
+    margin-top: 24px;
+  }
+  .motifs .weave {
+    height: 44px;
+    background-size: 88px 44px;
+    border-radius: 12px;
+  }
+  .motifs__tile {
+    height: 200px;
+    border-radius: var(--radius-l);
+    background-color: var(--vert);
+  }
+  .voice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .voice__col {
+    padding: 28px;
+    border-radius: var(--radius-l);
+    background: var(--card);
+    box-shadow: var(--shadow-card);
+    border-top: 8px solid var(--c);
+  }
+  .voice__col--do {
+    --c: var(--vert);
+  }
+  .voice__col--dont {
+    --c: var(--laterite);
+  }
+  .voice__col h3 {
+    font-size: 1.5rem;
+    margin-bottom: 14px;
+  }
+  .voice__col ul {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 8px;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 760px) {
+    .type,
+    .voice {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

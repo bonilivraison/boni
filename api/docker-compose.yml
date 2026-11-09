@@ -1,0 +1,41 @@
+# API d'inscription BoniLivraison.
+#
+# Serveur de démo :   docker compose --profile prod up -d --build
+#   -> Caddy obtient un certificat HTTPS pour API_DOMAIN (ports 80/443 ouverts, DNS pointé sur le serveur).
+# En local :          docker compose --profile dev up -d --build
+#   -> API sur http://localhost:8787 (API_PORT), e-mails captés par Mailpit sur http://localhost:8025.
+
+services:
+  api:
+    build: .
+    image: bonilivraison/api
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATA_DIR: /data
+    volumes:
+      - ./data:/data
+    ports:
+      - "127.0.0.1:${API_PORT:-8787}:8080"
+
+  caddy:
+    image: caddy:2.10-alpine
+    profiles: ["prod"]
+    restart: unless-stopped
+    depends_on: [api]
+    env_file: .env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    profiles: ["dev"]
+    ports:
+      - "8025:8025"
+
+volumes:
+  caddy_data:

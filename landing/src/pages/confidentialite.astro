@@ -1,0 +1,73 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const l = site.legal;
+---
+
+<Legal title="Données personnelles" updated="9 novembre 2026">
+  <p>
+    Cette page explique simplement ce que {site.name} fait des informations que vous laissez sur ce site. Elle s'appuie
+    sur la loi guinéenne L/2016/037/AN relative à la cybersécurité et à la protection des données à caractère
+    personnel, et sur ses textes d'application.
+  </p>
+
+  <h2>Qui est responsable ?</h2>
+  <p>{l.entity}, {l.address}. Contact : <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+
+  <h2>Quelles informations ?</h2>
+  <ul>
+    <li><strong>Clients</strong> : prénom, téléphone, quartier, services qui vous intéressent.</li>
+    <li>
+      <strong>Restaurants et commerces</strong> : nom et type de l'établissement, nom du contact, téléphone, quartier,
+      volume de commandes estimé.
+    </li>
+    <li>
+      <strong>Livreurs</strong> : prénom, nom, téléphone, quartier, type de véhicule, possession d'un permis, déclaration
+      d'avoir 18 ans ou plus.
+    </li>
+    <li>Pour tous : vos choix de consentement, la version du texte accepté et la date d'inscription.</li>
+  </ul>
+  <p>
+    Nous ne demandons sur ce site <strong>aucune pièce d'identité, aucune donnée bancaire et aucune position GPS</strong>.
+  </p>
+
+  <h2>Pourquoi ?</h2>
+  <ul>
+    <li>Vous recontacter au sujet du lancement de {site.name} (avec votre accord, case obligatoire).</li>
+    <li>Choisir les premiers quartiers desservis, à partir des quartiers déclarés (statistiques).</li>
+    <li>
+      Vous envoyer des messages d'information et de promotion par SMS ou WhatsApp, <strong>seulement si vous avez coché
+      la case facultative</strong>.
+    </li>
+  </ul>
+
+  <h2>Qui y a accès ?</h2>
+  <p>
+    Uniquement l'équipe {site.name}. Vos données ne sont ni vendues ni louées. Elles sont enregistrées sur notre serveur
+    et transmises par e-mail à l'équipe via notre prestataire d'envoi [nom du prestataire e-mail à compléter]. Si vous
+    choisissez l'envoi par WhatsApp, votre message est transmis via ce service.
+  </p>
+  <p>
+    <strong>Transfert hors de Guinée</strong> : [à compléter — indiquer si l'hébergeur ou le prestataire de formulaire
+    stocke les données hors de Guinée, et dans quel pays].
+  </p>
+
+  <h2>Combien de temps ?</h2>
+  <p>
+    Jusqu'à 12 mois après le lancement du service, puis les données sont supprimées, sauf si vous êtes devenu
+    utilisateur, partenaire ou livreur entre-temps.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Vous pouvez à tout moment demander à consulter, corriger ou supprimer vos informations, et retirer votre accord
+    pour les messages de promotion. Écrivez-nous à <a href={`mailto:${site.email}`}>{site.email}</a> ou par WhatsApp. Nous
+    vous répondons dans les meilleurs délais.
+  </p>
+
+  <h2>Sécurité</h2>
+  <p>
+    Le site est servi en HTTPS, le formulaire est protégé contre les envois automatiques et l'accès aux inscriptions
+    est réservé aux personnes habilitées.
+  </p>
+</Legal>

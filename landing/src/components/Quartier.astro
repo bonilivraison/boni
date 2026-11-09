@@ -1,0 +1,95 @@
+---
+import Icon from './Icon.astro';
+---
+
+<section class="quartier" aria-labelledby="quartier-title">
+  <div class="weave weave--laterite"></div>
+  <div class="quartier__body motif-losanges">
+    <svg class="quartier__map" viewBox="0 0 560 520" aria-hidden="true">
+      <path
+        d="M560 0 L560 250 C520 255 480 265 440 285 C390 310 350 335 300 360 C250 385 200 410 160 425 C130 436 105 432 100 418 C95 402 112 388 140 372 C190 343 235 312 280 278 C330 240 370 200 410 150 C440 112 470 60 480 0 Z"
+        fill="none"
+        stroke="#F2B705"
+        stroke-width="2"></path>
+      <ellipse cx="66" cy="474" rx="30" ry="10" transform="rotate(-24 66 474)" fill="none" stroke="#F2B705" stroke-width="2"></ellipse>
+      <g fill="#F6EEDF">
+        <circle class="spark" cx="160" cy="400" r="5" style="--s:0s"></circle>
+        <circle class="spark" cx="250" cy="335" r="5" style="--s:.6s"></circle>
+        <circle class="spark" cx="340" cy="290" r="5" style="--s:1.2s"></circle>
+        <circle class="spark" cx="420" cy="230" r="5" style="--s:1.8s"></circle>
+        <circle class="spark" cx="500" cy="120" r="5" style="--s:2.4s"></circle>
+        <circle class="spark" cx="470" cy="180" r="5" style="--s:.9s"></circle>
+        <circle class="spark" cx="380" cy="260" r="5" style="--s:1.5s"></circle>
+      </g>
+    </svg>
+    <div class="container quartier__inner">
+      <p class="eyebrow reveal">Ouverture quartier par quartier</p>
+      <h2 id="quartier-title" class="reveal" style="--d:80ms">Votre quartier<br />décide.</h2>
+      <p class="lead reveal" style="--d:160ms">
+        BoniLivraison démarre bientôt à Conakry, en commençant par une zone pilote. Dites-nous où vous êtes : vos
+        inscriptions nous aident à choisir où ouvrir en premier.
+      </p>
+      <a href="#inscription" class="btn btn--or reveal" style="--d:240ms">
+        <Icon name="pin" size={20} /> Je vote pour mon quartier
+      </a>
+    </div>
+  </div>
+  <div class="weave weave--laterite"></div>
+</section>
+
+<style>
+  .quartier__body {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--vert);
+    color: var(--sable);
+    padding-block: clamp(80px, 12vw, 160px);
+  }
+  .quartier__map {
+    position: absolute;
+    right: -6%;
+    top: 50%;
+    width: min(62vw, 720px);
+    transform: translateY(-50%) rotate(-6deg);
+    opacity: 0.85;
+  }
+  .spark {
+    animation: spark 3s ease-in-out infinite;
+    animation-delay: var(--s);
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @keyframes spark {
+    0%,
+    100% {
+      opacity: 0.25;
+      transform: scale(0.7);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.3);
+      fill: #f2b705;
+    }
+  }
+  .quartier__inner {
+    position: relative;
+  }
+  .quartier .eyebrow {
+    color: var(--or);
+  }
+  .quartier h2 {
+    font-size: clamp(3rem, 9vw, 7.4rem);
+    margin: 0.3em 0 0.4em;
+  }
+  .quartier .lead {
+    color: rgba(246, 238, 223, 0.88);
+    margin-bottom: 2rem;
+  }
+  @media (max-width: 760px) {
+    .quartier__map {
+      width: 120vw;
+      right: -50%;
+      opacity: 0.3;
+    }
+  }
+</style>

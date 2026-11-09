@@ -1,0 +1,596 @@
+---
+import Icon from './Icon.astro';
+import { site, url } from '../config/site';
+
+const tabs = [
+  { id: 'client', label: 'Je veux me faire livrer', short: 'Client', icon: 'utilisateur' },
+  { id: 'partenaire', label: 'Restaurant ou commerce', short: 'Partenaire', icon: 'boutique' },
+  { id: 'livreur', label: 'Je veux livrer', short: 'Livreur', icon: 'casque' },
+];
+
+/** Consentement (version site.consentVersion) : deux cases distinctes, jamais pré-cochées, + piège anti-robot. */
+const consent = (id: string) => `
+  <label class="check"><input type="checkbox" name="consentement_contact" value="oui" required />
+    <span>J'accepte que ${site.name} utilise ces informations pour me recontacter au sujet de son lancement.
+    <a href="${url('/confidentialite')}" target="_blank">En savoir plus sur mes données</a>.</span></label>
+  <label class="check"><input type="checkbox" name="consentement_promotion" value="oui" />
+    <span>J'accepte aussi de recevoir des messages d'information et de promotion par SMS ou WhatsApp (facultatif).</span></label>
+  <label class="hp" aria-hidden="true">Site web<input name="site_web" tabindex="-1" autocomplete="off" id="hp-${id}" /></label>`;
+---
+
+<section
+  id="inscription"
+  class="section signup"
+  data-endpoint={site.formEndpoint}
+  data-wa={site.whatsapp}
+  data-version={site.consentVersion}>
+  <div class="container signup__grid">
+    <div class="signup__intro">
+      <p class="eyebrow reveal">Inscriptions ouvertes</p>
+      <h2 class="section-title reveal" style="--d:80ms">Soyez parmi<br />les premiers.</h2>
+      <p class="lead reveal" style="--d:160ms">
+        Laissez-nous vos coordonnées : nous vous prévenons dès l'ouverture dans votre quartier. Une minute suffit.
+      </p>
+      <ul class="signup__promise reveal" style="--d:240ms">
+        <li><Icon name="check" size={18} /> Aucun engagement</li>
+        <li><Icon name="check" size={18} /> Pas de document à envoyer maintenant</li>
+        <li><Icon name="check" size={18} /> Vos données ne sont ni vendues ni partagées</li>
+      </ul>
+    </div>
+
+    <div class="signup__panel reveal" style="--d:120ms">
+      <div class="tabs" role="tablist" aria-label="Type d'inscription">
+        {
+          tabs.map((t, i) => (
+            <button
+              role="tab"
+              type="button"
+              id={`tab-${t.id}`}
+              aria-controls={`form-${t.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-tab={t.id}>
+              <Icon name={t.icon} size={20} />
+              <span class="tabs__long">{t.label}</span>
+              <span class="tabs__short">{t.short}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <!-- CLIENT -->
+      <form id="form-client" role="tabpanel" aria-labelledby="tab-client" data-form="client" novalidate>
+        <div class="row">
+          <label>Prénom<input name="prenom" autocomplete="given-name" required maxlength="60" /></label>
+          <label
+            >Téléphone<span class="tel"
+              ><span>+224</span><input name="telephone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="6XX XX XX XX" required /></span
+            ></label
+          >
+        </div>
+        <label>Quartier ou commune<input name="quartier" required maxlength="80" placeholder="Votre quartier à Conakry" /></label>
+        <fieldset>
+          <legend>Ce qui vous intéresse</legend>
+          <div class="chips">
+            {
+              ['Colis', 'Documents', 'Repas', 'Achats', 'Marchandises'].map((s) => (
+                <label class="chip">
+                  <input type="checkbox" name="services" value={s} />
+                  <span>{s}</span>
+                </label>
+              ))
+            }
+          </div>
+        </fieldset>
+        <Fragment set:html={consent('client')} />
+        <button class="btn submit" type="submit">Rejoindre la liste d'attente <Icon name="fleche" size={18} /></button>
+      </form>
+
+      <!-- PARTENAIRE -->
+      <form id="form-partenaire" role="tabpanel" aria-labelledby="tab-partenaire" data-form="partenaire" novalidate hidden>
+        <div class="row">
+          <label>Nom de l'établissement<input name="etablissement" required maxlength="100" /></label>
+          <label
+            >Type<select name="type" required>
+              <option value="">Choisir…</option>
+              <option>Restaurant</option>
+              <option>Commerce</option>
+              <option>Autre</option>
+            </select></label
+          >
+        </div>
+        <div class="row">
+          <label>Nom du contact<input name="contact" autocomplete="name" required maxlength="80" /></label>
+          <label
+            >Téléphone<span class="tel"
+              ><span>+224</span><input name="telephone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="6XX XX XX XX" required /></span
+            ></label
+          >
+        </div>
+        <div class="row">
+          <label>Quartier ou commune<input name="quartier" required maxlength="80" /></label>
+          <label
+            >Commandes par jour (environ)<select name="volume">
+              <option value="">Je ne sais pas</option>
+              <option>Moins de 10</option>
+              <option>10 à 30</option>
+              <option>30 à 100</option>
+              <option>Plus de 100</option>
+            </select></label
+          >
+        </div>
+        <Fragment set:html={consent('partenaire')} />
+        <button class="btn btn--nuit submit" type="submit">Devenir partenaire <Icon name="fleche" size={18} /></button>
+      </form>
+
+      <!-- LIVREUR -->
+      <form id="form-livreur" role="tabpanel" aria-labelledby="tab-livreur" data-form="livreur" novalidate hidden>
+        <div class="row">
+          <label>Prénom<input name="prenom" autocomplete="given-name" required maxlength="60" /></label>
+          <label>Nom<input name="nom" autocomplete="family-name" required maxlength="60" /></label>
+        </div>
+        <div class="row">
+          <label
+            >Téléphone<span class="tel"
+              ><span>+224</span><input name="telephone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="6XX XX XX XX" required /></span
+            ></label
+          >
+          <label>Quartier ou commune<input name="quartier" required maxlength="80" /></label>
+        </div>
+        <div class="row">
+          <fieldset>
+            <legend>Véhicule</legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="vehicule" value="Moto" required /><span>Moto</span></label>
+              <label class="chip"><input type="radio" name="vehicule" value="Voiture" /><span>Voiture</span></label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Permis de conduire</legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="permis" value="Oui" required /><span>Oui</span></label>
+              <label class="chip"><input type="radio" name="permis" value="Non" /><span>Non</span></label>
+            </div>
+          </fieldset>
+        </div>
+        <label class="check"><input type="checkbox" name="majeur" value="oui" required /> <span>J'ai 18 ans ou plus.</span></label>
+        <p class="note">Aucun document à envoyer maintenant : il vous sera demandé plus tard, dans l'application, pour vérifier votre profil.</p>
+        <Fragment set:html={consent('livreur')} />
+        <button class="btn btn--vert submit" type="submit">Devenir livreur BoniLivraison <Icon name="fleche" size={18} /></button>
+      </form>
+
+      <div class="done" hidden tabindex="-1" data-done>
+        <span class="done__icon"><Icon name="check" size={36} /></span>
+        <h3>C'est noté, merci !</h3>
+        <p data-done-text>Nous vous contacterons à l'ouverture dans votre quartier.</p>
+        <button type="button" class="btn btn--ghost" data-again>Faire une autre inscription</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const section = document.getElementById('inscription') as HTMLElement;
+  const endpoint = section.dataset.endpoint ?? '';
+  const wa = section.dataset.wa ?? '';
+  const version = section.dataset.version ?? '';
+  const tabs = Array.from(section.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+  const forms = Array.from(section.querySelectorAll<HTMLFormElement>('form[data-form]'));
+  const done = section.querySelector<HTMLElement>('[data-done]')!;
+
+  function select(id: string, focus = false) {
+    tabs.forEach((t) => {
+      const on = t.dataset.tab === id;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    forms.forEach((f) => (f.hidden = f.dataset.form !== id));
+    done.hidden = true;
+  }
+
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t.dataset.tab!));
+    t.addEventListener('keydown', (e) => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      select(tabs[(i + d + tabs.length) % tabs.length].dataset.tab!, true);
+    });
+  });
+
+  document.querySelectorAll<HTMLAnchorElement>('a[data-profil]').forEach((a) =>
+    a.addEventListener('click', () => select(a.dataset.profil!)),
+  );
+
+  const normalizePhone = (v: string) => v.replace(/\D/g, '').replace(/^(00)?224/, '');
+
+  function validate(form: HTMLFormElement) {
+    const tel = form.querySelector<HTMLInputElement>('input[name="telephone"]');
+    if (tel) {
+      const n = normalizePhone(tel.value);
+      tel.setCustomValidity(/^\d{9}$/.test(n) ? '' : 'Numéro à 9 chiffres, par exemple 620 00 00 00.');
+    }
+    form.querySelectorAll('.field-error').forEach((el) => el.remove());
+    let firstInvalid: HTMLElement | null = null;
+    for (const el of form.querySelectorAll<HTMLInputElement>('input, select')) {
+      if (el.validity.valid) continue;
+      // une seule erreur par groupe radio
+      if (el.type === 'radio' && el !== form.querySelector(`input[name="${el.name}"]`)) continue;
+      const host = (el.closest('fieldset') ?? el.closest('label')) as HTMLElement;
+      const msg = document.createElement('span');
+      msg.className = 'field-error';
+      msg.textContent =
+        el.validationMessage && el.name === 'telephone'
+          ? el.validationMessage
+          : el.type === 'checkbox'
+            ? 'Merci de cocher cette case.'
+            : 'Champ requis.';
+      host.appendChild(msg);
+      firstInvalid ??= el;
+    }
+    (firstInvalid as HTMLElement | null)?.focus();
+    return !firstInvalid;
+  }
+
+  function payload(form: HTMLFormElement) {
+    const fd = new FormData(form);
+    const data: Record<string, string | boolean> = { profil: form.dataset.form! };
+    for (const [k, v] of fd.entries()) {
+      if (k === 'site_web') continue;
+      const s = String(v).trim();
+      data[k] = data[k] ? `${data[k]}, ${s}` : s;
+    }
+    data.telephone = '+224' + normalizePhone(String(data.telephone ?? ''));
+    data.consentement_contact = fd.has('consentement_contact');
+    data.consentement_promotion = fd.has('consentement_promotion');
+    data.consentement_version = version;
+    data.consentement_date = new Date().toISOString();
+    return data;
+  }
+
+  const labels: Record<string, string> = {
+    client: 'liste d\'attente client',
+    partenaire: 'partenaire',
+    livreur: 'livreur',
+  };
+
+  function toWhatsApp(data: Record<string, string | boolean>) {
+    const lines = [`Bonjour BoniLivraison ! Inscription ${labels[String(data.profil)]} :`];
+    for (const [k, v] of Object.entries(data)) {
+      if (['profil', 'consentement_version', 'consentement_date'].includes(k) || typeof v === 'boolean') continue;
+      lines.push(`• ${k.replace(/_/g, ' ')} : ${v}`);
+    }
+    lines.push(`• j'accepte d'être recontacté(e) (version ${version})`);
+    if (data.consentement_promotion) lines.push("• j'accepte les messages d'information et de promotion");
+    return `https://wa.me/${wa}?text=${encodeURIComponent(lines.join('\n'))}`;
+  }
+
+  function showDone(text?: string) {
+    forms.forEach((f) => (f.hidden = true));
+    if (text) done.querySelector('[data-done-text]')!.textContent = text;
+    done.hidden = false;
+    done.focus();
+  }
+
+  forms.forEach((form) => {
+    form.addEventListener('input', (e) => {
+      const host = (e.target as HTMLElement).closest('label, fieldset');
+      host?.querySelector('.field-error')?.remove();
+    });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if ((form.elements.namedItem('site_web') as HTMLInputElement)?.value) return; // robot
+      if (!validate(form)) return;
+      const data = payload(form);
+      const btn = form.querySelector<HTMLButtonElement>('.submit')!;
+
+      if (!endpoint) {
+        window.open(toWhatsApp(data), '_blank', 'noopener');
+        showDone('Votre message WhatsApp est prêt : il ne reste qu\'à l\'envoyer. Nous vous contacterons à l\'ouverture dans votre quartier.');
+        form.reset();
+        return;
+      }
+      btn.disabled = true;
+      btn.dataset.label = btn.innerHTML;
+      btn.textContent = 'Envoi…';
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error(String(res.status));
+        form.reset();
+        showDone();
+      } catch {
+        const err = document.createElement('p');
+        err.className = 'field-error field-error--global';
+        err.innerHTML = `L'envoi n'a pas abouti. <a href="${toWhatsApp(data)}" target="_blank" rel="noopener">Envoyer par WhatsApp</a>`;
+        form.querySelector('.field-error--global')?.remove();
+        btn.before(err);
+      } finally {
+        btn.disabled = false;
+        if (btn.dataset.label) btn.innerHTML = btn.dataset.label;
+      }
+    });
+  });
+
+  section.querySelector('[data-again]')?.addEventListener('click', () => {
+    const current = tabs.find((t) => t.getAttribute('aria-selected') === 'true')?.dataset.tab ?? 'client';
+    select(current);
+  });
+</script>
+
+<style>
+  .signup__grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(32px, 6vw, 88px);
+    align-items: start;
+  }
+  .signup__intro .lead {
+    margin-top: 1.2rem;
+  }
+  .signup__promise {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: grid;
+    gap: 10px;
+    font-weight: 600;
+  }
+  .signup__promise li {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .signup__promise :global(svg) {
+    color: var(--accent-2);
+  }
+  .signup__panel {
+    background: var(--card);
+    border-radius: var(--radius-l);
+    box-shadow: var(--shadow-card);
+    padding: clamp(18px, 3vw, 36px);
+    border: 1px solid var(--line);
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 6px;
+    background: var(--bg-alt);
+    border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .tabs button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 10px;
+    background: transparent;
+    color: var(--ink-soft);
+    font: 700 0.9rem/1.1 var(--font-body);
+    cursor: pointer;
+    transition:
+      background 0.25s,
+      color 0.25s;
+  }
+  .tabs button[aria-selected='true'] {
+    background: var(--nuit);
+    color: var(--sable);
+  }
+  .tabs button[aria-selected='true'] :global(svg) {
+    color: var(--or);
+  }
+  .tabs__short {
+    display: none;
+  }
+  form {
+    display: grid;
+    gap: 18px;
+    animation: fade 0.45s var(--ease-out);
+  }
+  @keyframes fade {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  label,
+  legend {
+    display: grid;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+  }
+  legend {
+    margin-bottom: 8px;
+  }
+  input:not([type='checkbox'], [type='radio']),
+  select {
+    width: 100%;
+    font: 500 1rem/1.3 var(--font-body);
+    color: var(--ink);
+    background: var(--bg);
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 13px 14px;
+    transition:
+      border-color 0.2s,
+      background 0.2s;
+    appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C8371E' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+  }
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--laterite);
+    background: var(--card);
+  }
+  .tel {
+    display: flex;
+    align-items: stretch;
+    background: var(--bg);
+    border-radius: 14px;
+  }
+  .tel > span {
+    display: grid;
+    place-items: center;
+    padding: 0 12px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    border-right: 2px solid var(--line);
+  }
+  .tel input {
+    background: transparent !important;
+  }
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip {
+    display: inline-block;
+    cursor: pointer;
+  }
+  .chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .chip span {
+    display: inline-block;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 2px solid var(--line);
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .chip input:checked + span {
+    background: var(--laterite);
+    border-color: var(--laterite);
+    color: #fff;
+  }
+  .chip input:focus-visible + span {
+    outline: 3px solid var(--or);
+    outline-offset: 2px;
+  }
+  :global(.check) {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 10px;
+    align-items: start;
+    font-weight: 500;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+  }
+  :global(.check input) {
+    width: 20px;
+    height: 20px;
+    margin: 1px 0 0;
+    accent-color: var(--laterite);
+  }
+  :global(.check a) {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .note {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    background: var(--bg-alt);
+    border-left: 4px solid var(--or);
+    padding: 10px 14px;
+    border-radius: 0 10px 10px 0;
+  }
+  :global(.hp) {
+    position: absolute;
+    left: -9999px;
+  }
+  .submit {
+    justify-self: start;
+    margin-top: 6px;
+  }
+  :global(.field-error) {
+    grid-column: 1 / -1;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+  :global(.field-error a) {
+    color: inherit;
+  }
+  .done {
+    text-align: center;
+    padding: 32px 8px;
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    animation: fade 0.5s var(--ease-out);
+  }
+  .done[hidden] {
+    display: none;
+  }
+  .done:focus {
+    outline: none;
+  }
+  .done__icon {
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    background: var(--vert);
+    color: #fff;
+  }
+  .done h3 {
+    font-size: 2rem;
+  }
+  .done p {
+    color: var(--ink-soft);
+    max-width: 42ch;
+  }
+  @media (max-width: 960px) {
+    .signup__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+    .tabs__long {
+      display: none;
+    }
+    .tabs__short {
+      display: inline;
+    }
+    .tabs button {
+      padding: 11px 6px;
+      font-size: 0.85rem;
+    }
+    .submit {
+      justify-self: stretch;
+    }
+  }
+</style>

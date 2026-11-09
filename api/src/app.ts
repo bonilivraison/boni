@@ -1,0 +1,93 @@
+import { inscriptionSchema } from './inscription/schema.ts';
+import { enregistrer } from './inscription/store.ts';
+import { notifier } from './inscription/mailer.ts';
+import { creerLimiteur } from './rate-limit.ts';
+
+export interface Config {
+  /** Origines autorisées (CORS + contrôle d'origine). Vide = toutes (développement uniquement). */
+  origines: string[];
+  dataDir: string;
+  maxParFenetre: number;
+  fenetreMs: number;
+}
+
+export function configDepuisEnv(env: NodeJS.ProcessEnv = process.env): Config {
+  return {
+    origines: (env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean),
+    dataDir: env.DATA_DIR ?? './data',
+    maxParFenetre: Number(env.RATE_LIMIT_MAX ?? 5),
+    fenetreMs: Number(env.RATE_LIMIT_WINDOW_MS ?? 10 * 60 * 1000),
+  };
+}
+
+const MAX_OCTETS = 8 * 1024;
+
+/**
+ * Cœur HTTP de l'API, en Request/Response standard (testable sans serveur).
+ * `notifierFn` est injectable pour les tests.
+ */
+export function creerApp(config: Config, notifierFn: typeof notifier = notifier) {
+  const autorise = creerLimiteur(config.maxParFenetre, config.fenetreMs);
+
+  const origineOk = (o: string | null) => !config.origines.length || (!!o && config.origines.includes(o));
+
+  const entetes = (origine: string | null): Record<string, string> => ({
+    'Content-Type': 'application/json; charset=utf-8',
+    'Cache-Control': 'no-store',
+    'X-Content-Type-Options': 'nosniff',
+    Vary: 'Origin',
+    ...(origine && origineOk(origine)
+      ? {
+          'Access-Control-Allow-Origin': origine,
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Max-Age': '86400',
+        }
+      : {}),
+  });
+
+  return async function traiter(request: Request, ip: string): Promise<Response> {
+    const url = new URL(request.url);
+    const origine = request.headers.get('origin');
+    const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status, headers: entetes(origine) });
+
+    if (url.pathname === '/health') return json(200, { ok: true });
+    if (url.pathname !== '/api/inscription') return json(404, { ok: false });
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: origineOk(origine) ? 204 : 403, headers: entetes(origine) });
+    }
+    if (request.method !== 'POST') return json(405, { ok: false });
+    if (config.origines.length && !origineOk(origine)) return json(403, { ok: false, error: 'origine' });
+    if (!request.headers.get('content-type')?.includes('application/json')) return json(415, { ok: false });
+    if (Number(request.headers.get('content-length') ?? 0) > MAX_OCTETS) return json(413, { ok: false });
+    if (!autorise(ip)) return json(429, { ok: false, error: 'trop_de_demandes' });
+
+    let brut: unknown;
+    try {
+      const texte = await request.text();
+      if (texte.length > MAX_OCTETS) return json(413, { ok: false });
+      brut = JSON.parse(texte);
+    } catch {
+      return json(400, { ok: false, error: 'json' });
+    }
+
+    // Robot : on répond « ok » sans rien faire, pour ne pas le renseigner.
+    if (typeof brut === 'object' && brut && (brut as Record<string, unknown>).site_web) return json(200, { ok: true });
+
+    const res = inscriptionSchema.safeParse(brut);
+    if (!res.success) {
+      return json(422, { ok: false, error: 'validation', champs: res.error.issues.map((i) => i.path.join('.')) });
+    }
+
+    try {
+      await enregistrer(res.data, config.dataDir);
+    } catch (e) {
+      console.error('[inscription] enregistrement impossible', e);
+      return json(500, { ok: false });
+    }
+    // L'inscription est sauvegardée : un e-mail en échec ne doit pas faire échouer la demande.
+    notifierFn(res.data).catch((e) => console.error('[inscription] e-mail non envoyé', e));
+    return json(201, { ok: true });
+  };
+}

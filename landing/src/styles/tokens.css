@@ -1,0 +1,58 @@
+/* =========================================================
+   BoniLivraison — jetons de marque « Conakry vibrante »
+   Rouge, jaune, vert du drapeau réinterprétés en matières :
+   latérite des pistes, or de Haute-Guinée, vert du Fouta.
+   ========================================================= */
+:root {
+  /* Palette de marque (fixe, quel que soit le thème) */
+  --laterite: #c8371e;
+  --laterite-deep: #9a2612;
+  --laterite-soft: #f4c7b5;
+  --or: #f2b705;
+  --or-deep: #c99200;
+  --or-soft: #ffe28a;
+  --vert: #0f6b3e;
+  --vert-deep: #0a4a2b;
+  --vert-soft: #bfe3c9;
+  --nuit: #0e1a24;
+  --nuit-2: #16283a;
+  --sable: #f6eedf;
+  --sable-2: #efe3cd;
+  --blanc: #fffdf8;
+
+  /* Rôles (thème clair) */
+  --bg: var(--sable);
+  --bg-alt: var(--sable-2);
+  --card: var(--blanc);
+  --ink: var(--nuit);
+  --ink-soft: #46525c;
+  --line: rgba(14, 26, 36, 0.14);
+  --accent: #ae2d18; /* latérite lisible en petit texte (AA sur sable) */
+  --accent-2: var(--vert);
+
+  /* Typographie */
+  --font-display: 'Bricolage Grotesque', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+
+  /* Formes */
+  --radius-s: 10px;
+  --radius-m: 18px;
+  --radius-l: 32px;
+  --shadow-card: 0 1px 0 rgba(14, 26, 36, 0.06), 0 18px 40px -18px rgba(14, 26, 36, 0.35);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --gutter: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b141c;
+    --bg-alt: #101e29;
+    --card: #142430;
+    --ink: var(--sable);
+    --ink-soft: #b9b2a4;
+    --line: rgba(246, 238, 223, 0.14);
+    --accent: #ff8b6c;
+    --accent-2: #5fd394;
+    --shadow-card: 0 1px 0 rgba(0, 0, 0, 0.3), 0 18px 40px -18px rgba(0, 0, 0, 0.7);
+  }
+}

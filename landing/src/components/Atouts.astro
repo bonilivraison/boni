@@ -1,0 +1,110 @@
+---
+const atouts = [
+  {
+    title: 'Le prix, avant tout.',
+    text: "Prise en charge, distance, véhicule : l'estimation s'affiche en détail avant que vous confirmiez. Pas de surprise à l'arrivée.",
+  },
+  {
+    title: 'Votre livreur, sur la carte.',
+    text: 'Pendant la livraison, vous voyez où il en est. Plus besoin d\'appeler pour demander « tu es où ? ».',
+  },
+  {
+    title: 'Une notification à chaque étape.',
+    text: 'Livreur trouvé, colis récupéré, en route, arrivé : vous êtes prévenu au bon moment.',
+  },
+  {
+    title: 'Des livreurs vérifiés.',
+    text: 'Chaque livreur est contrôlé avant de pouvoir accepter sa première mission.',
+  },
+  {
+    title: 'Moto ou voiture.',
+    text: 'La moto se faufile pour le léger et l\'urgent, la voiture prend le volumineux.',
+  },
+];
+---
+
+<section class="section atouts">
+  <div class="container atouts__grid">
+    <div class="atouts__aside">
+      <p class="eyebrow reveal">Pourquoi BoniLivraison</p>
+      <h2 class="section-title reveal" style="--d:80ms">La confiance, ça se voit.</h2>
+      <p class="lead reveal" style="--d:160ms">
+        Une livraison réussie, c'est d'abord savoir : combien, où, quand. BoniLivraison vous montre tout, du départ à
+        l'arrivée.
+      </p>
+    </div>
+    <ol class="atouts__list">
+      {
+        atouts.map((a, i) => (
+          <li class="reveal" style={`--d:${i * 70}ms`}>
+            <span class="atouts__n">0{i + 1}</span>
+            <div>
+              <h3>{a.title}</h3>
+              <p>{a.text}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .atouts {
+    background: var(--bg-alt);
+    padding-top: clamp(110px, 14vw, 180px);
+  }
+  .atouts__grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(32px, 6vw, 96px);
+    align-items: start;
+  }
+  .atouts__aside {
+    position: sticky;
+    top: 120px;
+  }
+  .atouts__aside .lead {
+    margin-top: 1.2rem;
+  }
+  .atouts__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .atouts__list li {
+    display: grid;
+    grid-template-columns: clamp(64px, 9vw, 120px) 1fr;
+    gap: 18px;
+    padding-block: 28px;
+    border-top: 2px solid var(--line);
+  }
+  .atouts__list li:last-child {
+    border-bottom: 2px solid var(--line);
+  }
+  .atouts__n {
+    font: 800 clamp(2.6rem, 5.6vw, 4.6rem)/0.85 var(--font-display);
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--laterite);
+    transition: color 0.3s;
+  }
+  .atouts__list li:hover .atouts__n {
+    color: var(--laterite);
+  }
+  .atouts__list h3 {
+    font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    margin-bottom: 8px;
+  }
+  .atouts__list p {
+    color: var(--ink-soft);
+  }
+  @media (max-width: 900px) {
+    .atouts__grid {
+      grid-template-columns: 1fr;
+    }
+    .atouts__aside {
+      position: static;
+    }
+  }
+</style>

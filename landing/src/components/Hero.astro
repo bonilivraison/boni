@@ -1,0 +1,472 @@
+---
+import Icon from './Icon.astro';
+import { whatsappLink } from '../config/site';
+const route = 'M150 396 C210 372 250 345 300 318 S410 250 480 205';
+const wa = whatsappLink("Bonjour BoniLivraison ! Je veux être prévenu(e) de l'ouverture.");
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__sun" aria-hidden="true"></div>
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow hero-in" style="--i:0">Bientôt à Conakry · Application Android</p>
+      <h1 id="hero-title" class="hero__title">
+        <span class="hero-in" style="--i:1">Conakry,</span>
+        <span class="hero-in hero__line" style="--i:2"
+          >de <span class="pin pin--a"><span>A</span></span> à <span class="pin pin--b"><span>B</span></span>.</span
+        >
+      </h1>
+      <p class="lead hero-in" style="--i:3">
+        Colis, documents, repas, achats chez nos commerces partenaires : une seule application pour tout faire livrer, à moto
+        ou en voiture. Vous voyez le prix <strong>avant</strong> de confirmer, puis vous suivez votre livreur sur la carte.
+      </p>
+      <div class="hero__ctas hero-in" style="--i:4">
+        <a href="#inscription" class="btn">
+          Rejoindre la liste d'attente <Icon name="fleche" size={18} />
+        </a>
+        <a href={wa} class="btn btn--ghost" target="_blank" rel="noopener">
+          <Icon name="whatsapp" size={20} /> Écrire sur WhatsApp
+        </a>
+      </div>
+      <ul class="hero__chips hero-in" style="--i:5" aria-label="Ce qui vous attend">
+        <li><Icon name="prix" size={18} /> Prix affiché avant de confirmer</li>
+        <li><Icon name="carte" size={18} /> Livreur suivi sur la carte</li>
+        <li><Icon name="moto" size={18} /> Moto ou voiture</li>
+      </ul>
+    </div>
+
+    <div class="hero__visual hero-in" style="--i:2" aria-hidden="true">
+      <svg class="map" viewBox="0 0 560 520" role="presentation">
+        <defs>
+          <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
+            <path d="M28 0H0V28" fill="none" stroke="#F6EEDF" stroke-opacity=".06"></path>
+          </pattern>
+          <pattern id="tissu" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <path d="M0 11h22" stroke="#0A4A2B" stroke-width="5"></path>
+          </pattern>
+          <clipPath id="frame"><rect width="560" height="520" rx="36"></rect></clipPath>
+        </defs>
+        <g clip-path="url(#frame)">
+          <rect width="560" height="520" fill="#0C2B3E"></rect>
+          <rect width="560" height="520" fill="url(#grid)"></rect>
+          <!-- houle -->
+          <g fill="none" stroke="#F6EEDF" stroke-opacity=".18" stroke-width="2" stroke-linecap="round" class="waves">
+            <path d="M40 210q12-8 24 0t24 0"></path>
+            <path d="M70 250q12-8 24 0t24 0"></path>
+            <path d="M260 460q12-8 24 0t24 0"></path>
+            <path d="M330 420q12-8 24 0t24 0"></path>
+            <path d="M210 120q12-8 24 0t24 0"></path>
+          </g>
+          <text x="38" y="150" class="map__label">OCÉAN ATLANTIQUE</text>
+          <!-- presqu'île stylisée -->
+          <path
+            class="land"
+            d="M560 0 L560 250 C520 255 480 265 440 285 C390 310 350 335 300 360 C250 385 200 410 160 425 C130 436 105 432 100 418 C95 402 112 388 140 372 C190 343 235 312 280 278 C330 240 370 200 410 150 C440 112 470 60 480 0 Z"
+            fill="#0F6B3E"></path>
+          <path
+            d="M560 0 L560 250 C520 255 480 265 440 285 C390 310 350 335 300 360 C250 385 200 410 160 425 C130 436 105 432 100 418 C95 402 112 388 140 372 C190 343 235 312 280 278 C330 240 370 200 410 150 C440 112 470 60 480 0 Z"
+            fill="url(#tissu)"
+            opacity=".55"></path>
+          <path
+            d="M560 250 C520 255 480 265 440 285 C390 310 350 335 300 360 C250 385 200 410 160 425 C130 436 105 432 100 418 C95 402 112 388 140 372 C190 343 235 312 280 278 C330 240 370 200 410 150 C440 112 470 60 480 0"
+            fill="none"
+            stroke="#F2B705"
+            stroke-opacity=".5"
+            stroke-width="2"
+            stroke-dasharray="1 7"
+            stroke-linecap="round"></path>
+          <!-- îles au large -->
+          <ellipse cx="66" cy="474" rx="30" ry="10" transform="rotate(-24 66 474)" fill="#0F6B3E"></ellipse>
+          <ellipse cx="126" cy="494" rx="15" ry="6" transform="rotate(-18 126 494)" fill="#0F6B3E"></ellipse>
+          <text x="470" y="60" class="map__label map__label--or" text-anchor="end">CONAKRY</text>
+
+          <!-- trajet -->
+          <path d={route} fill="none" stroke="#F6EEDF" stroke-opacity=".35" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round"></path>
+          <path class="route" d={route} pathLength="1" fill="none" stroke="#F2B705" stroke-width="5" stroke-linecap="round"></path>
+
+          <!-- point A -->
+          <g transform="translate(150 396)">
+            <circle r="22" fill="#F2B705" opacity=".25" class="ping"></circle>
+            <circle r="15" fill="#F2B705"></circle>
+            <text y="5.5" text-anchor="middle" class="map__pin">A</text>
+          </g>
+          <!-- point B -->
+          <g transform="translate(480 205)" class="pin-b">
+            <ellipse cy="2" rx="10" ry="3.5" fill="#000" opacity=".35"></ellipse>
+            <path d="M0 0C-12-14-18-23-18-32a18 18 0 1 1 36 0c0 9-6 18-18 32z" fill="#C8371E" stroke="#F6EEDF" stroke-width="2.5"></path>
+            <text y="-26" text-anchor="middle" class="map__pin map__pin--light">B</text>
+          </g>
+
+          <!-- livreur -->
+          <g class="rider">
+            <g transform="scale(1.15)">
+              <rect x="-21" y="-21" width="15" height="13" rx="2.5" fill="#C8371E" stroke="#F6EEDF" stroke-width="1.5"></rect>
+              <path d="M-12 6-2-5h12l3 11" fill="none" stroke="#F6EEDF" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"></path>
+              <path d="M10-5 7-12h6" fill="none" stroke="#F6EEDF" stroke-width="3" stroke-linecap="round"></path>
+              <circle cx="-12" cy="6" r="6" fill="#0E1A24" stroke="#F6EEDF" stroke-width="3"></circle>
+              <circle cx="13" cy="6" r="6" fill="#0E1A24" stroke="#F6EEDF" stroke-width="3"></circle>
+              <path d="M-1-15-4-5h8" fill="none" stroke="#F2B705" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <circle cx="0" cy="-20" r="5" fill="#F2B705"></circle>
+            </g>
+          </g>
+        </g>
+      </svg>
+
+      <div class="ui-card ui-card--price">
+        <p class="ui-card__label">Estimation</p>
+        <p class="ui-card__title">Prix affiché avant de confirmer</p>
+        <ul class="ui-card__rows">
+          <li><span>Prise en charge</span><i></i></li>
+          <li><span>Distance</span><i></i></li>
+          <li><span>Véhicule · moto</span><i></i></li>
+        </ul>
+        <span class="ui-card__btn">Confirmer</span>
+      </div>
+
+      <div class="ui-card ui-card--track">
+        <p class="ui-card__status"><span class="live"></span> Votre livreur est en route</p>
+        <div class="steps"><i class="on"></i><i class="on"></i><i class="on now"></i><i></i><i></i></div>
+        <p class="ui-card__hint"><Icon name="cloche" size={15} /> Une notification à chaque étape</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: clamp(28px, 5vw, 64px) clamp(64px, 9vw, 120px);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .hero__sun {
+    position: absolute;
+    z-index: -1;
+    width: min(70vw, 820px);
+    aspect-ratio: 1;
+    right: -18vw;
+    top: -22%;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, var(--or-soft), transparent 62%);
+    opacity: 0.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .hero__sun {
+      opacity: 0.12;
+    }
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.02fr 0.98fr;
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+  .hero__title {
+    font-size: clamp(3.3rem, 9.4vw, 8rem);
+    margin: 0.22em 0 0.32em;
+    line-height: 0.92;
+  }
+  .hero__title > span {
+    display: block;
+  }
+  .pin {
+    display: inline-grid;
+    place-items: center;
+    width: 0.92em;
+    height: 0.92em;
+    font-size: 0.82em;
+    border-radius: 50% 50% 50% 8%;
+    transform: rotate(-45deg) translateY(-0.04em);
+    vertical-align: middle;
+    color: var(--nuit);
+  }
+  .pin > span {
+    transform: rotate(45deg);
+    line-height: 1;
+  }
+  .pin--a {
+    background: var(--or);
+  }
+  .pin--b {
+    background: var(--laterite);
+    color: var(--sable);
+  }
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 2rem;
+  }
+  .hero__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .hero__chips li {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero__chips :global(svg) {
+    color: var(--accent-2);
+  }
+
+  /* Animation d'entrée orchestrée */
+  .hero-in {
+    animation: rise 1s var(--ease-out) both;
+    animation-delay: calc(var(--i) * 110ms + 80ms);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+  }
+
+  /* Visuel */
+  .hero__visual {
+    position: relative;
+    padding: 6% 4% 8%;
+  }
+  .map {
+    width: 100%;
+    height: auto;
+    border-radius: 36px;
+    box-shadow:
+      0 40px 80px -30px rgba(14, 26, 36, 0.55),
+      0 0 0 10px var(--bg-alt);
+    transform: rotate(-2deg);
+  }
+  .map__label {
+    font: 700 11px/1 var(--font-body);
+    letter-spacing: 0.32em;
+    fill: #f6eedf;
+    fill-opacity: 0.45;
+  }
+  .map__label--or {
+    fill: #f2b705;
+    fill-opacity: 0.85;
+    font-size: 13px;
+  }
+  .map__pin {
+    font: 800 17px/1 var(--font-display);
+    fill: #0e1a24;
+  }
+  .map__pin--light {
+    fill: #f6eedf;
+  }
+  .route {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw 2.4s var(--ease-out) 0.9s forwards;
+  }
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .rider {
+    offset-path: path('M150 396 C210 372 250 345 300 318 S410 250 480 205');
+    offset-rotate: auto;
+    offset-distance: 0%;
+    animation: ride 7s cubic-bezier(0.45, 0, 0.3, 1) 1s infinite;
+  }
+  @keyframes ride {
+    0% {
+      offset-distance: 0%;
+      opacity: 0;
+    }
+    6% {
+      opacity: 1;
+    }
+    62% {
+      offset-distance: 100%;
+      opacity: 1;
+    }
+    72%,
+    100% {
+      offset-distance: 100%;
+      opacity: 0;
+    }
+  }
+  .ping {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: ping 2.2s ease-out infinite;
+  }
+  @keyframes ping {
+    from {
+      transform: scale(0.7);
+      opacity: 0.6;
+    }
+    to {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+  .pin-b path {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: drop 0.8s var(--ease-out) 3s both;
+  }
+  @keyframes drop {
+    from {
+      transform: translateY(-40px) scale(0.6);
+      opacity: 0;
+    }
+  }
+
+  /* Cartes d'interface flottantes */
+  .ui-card {
+    position: absolute;
+    background: var(--card);
+    color: var(--ink);
+    border-radius: 20px;
+    box-shadow: var(--shadow-card);
+    padding: 16px 18px;
+    width: min(250px, 58%);
+    font-size: 0.85rem;
+    animation: float 6s ease-in-out infinite;
+  }
+  .ui-card--price {
+    left: -2%;
+    top: 0;
+    transform: rotate(-3deg);
+  }
+  .ui-card--track {
+    right: -2%;
+    bottom: 0;
+    animation-delay: -3s;
+  }
+  @keyframes float {
+    50% {
+      translate: 0 -10px;
+    }
+  }
+  .ui-card__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .ui-card__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    margin: 4px 0 10px;
+  }
+  .ui-card__rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 7px;
+    color: var(--ink-soft);
+  }
+  .ui-card__rows li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .ui-card__rows i {
+    width: 52px;
+    height: 9px;
+    border-radius: 9px;
+    background: linear-gradient(90deg, var(--line), var(--bg-alt), var(--line));
+    background-size: 200% 100%;
+    animation: shimmer 1.8s linear infinite;
+  }
+  @keyframes shimmer {
+    to {
+      background-position: -200% 0;
+    }
+  }
+  .ui-card__btn {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    background: var(--laterite);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 8px;
+  }
+  .ui-card__status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+  }
+  .live {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #1fa463;
+    box-shadow: 0 0 0 0 rgba(31, 164, 99, 0.6);
+    animation: live 1.6s infinite;
+  }
+  @keyframes live {
+    to {
+      box-shadow: 0 0 0 10px rgba(31, 164, 99, 0);
+    }
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin: 12px 0 10px;
+  }
+  .steps i {
+    height: 6px;
+    border-radius: 6px;
+    background: var(--line);
+  }
+  .steps i.on {
+    background: var(--vert);
+  }
+  .steps i.now {
+    background: var(--or);
+  }
+  .ui-card__hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ink-soft);
+    font-size: 0.8rem;
+  }
+
+  @media (max-width: 920px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+    }
+    .hero__visual {
+      max-width: 560px;
+      margin-inline: auto;
+      width: 100%;
+    }
+  }
+  @media (max-width: 520px) {
+    .ui-card {
+      font-size: 0.78rem;
+      padding: 12px 14px;
+      width: 64%;
+    }
+    .ui-card__rows li:nth-child(3) {
+      display: none;
+    }
+    .map {
+      box-shadow:
+        0 30px 60px -30px rgba(14, 26, 36, 0.55),
+        0 0 0 6px var(--bg-alt);
+    }
+  }
+</style>

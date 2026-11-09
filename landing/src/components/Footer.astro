@@ -1,0 +1,163 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { site, url, whatsappLink } from '../config/site';
+const year = new Date().getFullYear();
+const socials = Object.entries(site.socials).filter(([, url]) => url);
+---
+
+<footer class="footer">
+  <div class="weave"></div>
+  <div class="footer__body motif-losanges">
+    <div class="container">
+      <p class="footer__big" aria-hidden="true">De A à B.</p>
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <Logo tone="light" size={44} />
+          <p>Livraison à la demande, bientôt à Conakry.</p>
+        </div>
+        <nav aria-label="Liens du pied de page">
+          <h3>Le service</h3>
+          <ul>
+            <li><a href={url('/#services')}>Services</a></li>
+            <li><a href={url('/#comment')}>Comment ça marche</a></li>
+            <li><a href={url('/#inscription')}>S'inscrire</a></li>
+            <li><a href={url('/#faq')}>Questions fréquentes</a></li>
+          </ul>
+        </nav>
+        <div>
+          <h3>Nous joindre</h3>
+          <ul>
+            <li>
+              <a href={whatsappLink('Bonjour BoniLivraison !')} target="_blank" rel="noopener" class="footer__wa"
+                ><Icon name="whatsapp" size={18} /> WhatsApp</a
+              >
+            </li>
+            <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+            {
+              socials.map(([name, url]) => (
+                <li>
+                  <a href={url} target="_blank" rel="noopener" class="footer__social">
+                    {name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <h3>Informations</h3>
+          <ul>
+            <li><a href={url('/mentions-legales')}>Mentions légales</a></li>
+            <li><a href={url('/confidentialite')}>Données personnelles</a></li>
+            <li><a href={url('/marque')}>Charte de marque</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer__legal">© {year} {site.name}. Fait avec fierté pour Conakry.</p>
+    </div>
+  </div>
+</footer>
+
+<a href={whatsappLink("Bonjour BoniLivraison ! J'ai une question.")} class="wa-float" target="_blank" rel="noopener" aria-label="Nous écrire sur WhatsApp">
+  <Icon name="whatsapp" size={28} />
+</a>
+
+<style>
+  .footer__body {
+    background-color: var(--nuit);
+    color: var(--sable);
+    padding-block: clamp(56px, 8vw, 96px) 32px;
+    overflow: hidden;
+  }
+  .footer__big {
+    font: 800 clamp(4.5rem, 18vw, 15rem) / 0.85 var(--font-display);
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(242, 183, 5, 0.55);
+    margin-bottom: clamp(40px, 6vw, 72px);
+    white-space: nowrap;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 36px;
+  }
+  .footer__brand p {
+    margin-top: 16px;
+    color: rgba(246, 238, 223, 0.7);
+    max-width: 30ch;
+  }
+  .footer h3 {
+    font-size: 0.8rem;
+    font-family: var(--font-body);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--or);
+    margin-bottom: 16px;
+  }
+  .footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .footer a {
+    text-decoration: none;
+    color: rgba(246, 238, 223, 0.85);
+    overflow-wrap: anywhere;
+  }
+  .footer a:hover {
+    color: var(--or);
+  }
+  .footer__wa {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .footer__social {
+    text-transform: capitalize;
+  }
+  .footer__legal {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(246, 238, 223, 0.14);
+    font-size: 0.85rem;
+    color: rgba(246, 238, 223, 0.55);
+  }
+  .wa-float {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 60;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--vert);
+    color: #fff;
+    box-shadow:
+      0 4px 0 var(--vert-deep),
+      0 14px 30px -10px rgba(0, 0, 0, 0.5);
+    transition: transform 0.25s var(--ease-out);
+    animation: wa-in 0.6s var(--ease-out) 2s both;
+  }
+  .wa-float:hover {
+    transform: translateY(-3px) rotate(-6deg);
+  }
+  @keyframes wa-in {
+    from {
+      transform: scale(0);
+    }
+  }
+  @media (max-width: 860px) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

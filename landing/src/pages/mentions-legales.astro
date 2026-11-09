@@ -1,0 +1,39 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site, url } from '../config/site';
+const l = site.legal;
+---
+
+<Legal title="Mentions légales" updated="9 novembre 2026">
+  <h2>Éditeur du site</h2>
+  <p>
+    <strong>{l.entity}</strong><br />
+    {l.form}<br />
+    RCCM : {l.rccm}<br />
+    Siège : {l.address}<br />
+    Contact : <a href={`mailto:${site.email}`}>{site.email}</a>
+  </p>
+  <p>Responsable de la publication : {l.director}</p>
+
+  <h2>Hébergement</h2>
+  <p>{l.host}</p>
+
+  <h2>Objet du site</h2>
+  <p>
+    Ce site annonce le lancement prochain du service {site.name} à Conakry et permet de s'inscrire sur une liste
+    d'attente (clients, restaurants et commerces, livreurs). Les fonctionnalités présentées décrivent le service prévu ;
+    leurs modalités définitives (zones desservies, moyens de paiement, tarifs) seront précisées à l'ouverture.
+  </p>
+
+  <h2>Propriété intellectuelle</h2>
+  <p>
+    Le nom {site.name}, le logo, les illustrations et les textes de ce site sont la propriété de {l.entity}. Toute
+    reproduction sans autorisation écrite est interdite.
+  </p>
+
+  <h2>Données personnelles</h2>
+  <p>Voir notre page <a href={url('/confidentialite')}>Données personnelles</a>.</p>
+
+  <h2>Cookies</h2>
+  <p>Ce site n'utilise aucun cookie publicitaire ni aucun outil de mesure d'audience tiers.</p>
+</Legal>

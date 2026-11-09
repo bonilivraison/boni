@@ -1,0 +1,14 @@
+# Documents confidentiels : jamais dans le dépôt (public)
+cahier_des_charges/
+docs/cadrage/
+
+# Outils locaux
+.claude/
+.DS_Store
+
+# Dépendances, builds, secrets, données
+node_modules/
+dist/
+.astro/
+.env
+data/

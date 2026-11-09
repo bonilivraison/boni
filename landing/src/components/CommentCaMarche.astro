@@ -1,0 +1,154 @@
+---
+import Icon from './Icon.astro';
+const steps = [
+  {
+    icon: 'pin',
+    title: 'Indiquez A et B',
+    text: 'Adresse, quartier, repère connu ou point sur la carte : vous décrivez le départ et l\'arrivée comme vous le feriez au téléphone.',
+  },
+  {
+    icon: 'prix',
+    title: 'Voyez le prix, puis confirmez',
+    text: 'Le prix estimé s\'affiche, détaillé, avant toute validation. Vous confirmez seulement s\'il vous convient.',
+  },
+  {
+    icon: 'carte',
+    title: 'Suivez votre livreur',
+    text: 'Pendant la livraison, vous voyez votre livreur avancer sur la carte et recevez une notification à chaque étape.',
+  },
+  {
+    icon: 'check',
+    title: 'C\'est livré',
+    text: 'La réception est confirmée à l\'arrivée. Vous gardez votre reçu et notez la course.',
+  },
+];
+---
+
+<section id="comment" class="section how motif-losanges">
+  <div class="container">
+    <p class="eyebrow reveal">Comment ça marche</p>
+    <h2 class="section-title reveal" style="--d:80ms">Quatre gestes.<br /><span>Zéro surprise.</span></h2>
+
+    <ol class="how__steps">
+      <svg class="how__road" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 20 C 160 0, 340 40, 500 20 S 840 0, 1000 20" fill="none" stroke="#F2B705" stroke-width="3" stroke-dasharray="2 12" stroke-linecap="round"></path>
+      </svg>
+      {
+        steps.map((s, i) => (
+          <li class="step reveal" style={`--d:${i * 140}ms`}>
+            <span class="step__badge">
+              <Icon name={s.icon} size={30} />
+              <b>{i + 1}</b>
+            </span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .how {
+    background-color: var(--nuit);
+    color: var(--sable);
+  }
+  .how .eyebrow {
+    color: var(--or);
+  }
+  .how h2 span {
+    color: var(--or);
+  }
+  .how__steps {
+    position: relative;
+    list-style: none;
+    padding: 0;
+    margin: clamp(48px, 7vw, 88px) 0 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(20px, 3vw, 40px);
+  }
+  .how__road {
+    position: absolute;
+    top: 30px;
+    left: 4%;
+    width: 92%;
+    height: 40px;
+    z-index: 0;
+  }
+  .step {
+    position: relative;
+    z-index: 1;
+  }
+  .step__badge {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 92px;
+    height: 92px;
+    border-radius: 28px;
+    background: var(--nuit-2);
+    border: 2px solid rgba(246, 238, 223, 0.14);
+    color: var(--or);
+    margin-bottom: 28px;
+  }
+  .step:nth-child(odd) .step__badge {
+    transform: rotate(-4deg);
+  }
+  .step:nth-child(even) .step__badge {
+    transform: rotate(3deg);
+  }
+  .step__badge b {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--laterite);
+    color: #fff;
+    font: 800 1rem/1 var(--font-display);
+  }
+  .step:last-child .step__badge {
+    background: var(--vert);
+    color: #fff;
+    border-color: transparent;
+  }
+  .step h3 {
+    font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+    margin-bottom: 10px;
+  }
+  .step p {
+    color: rgba(246, 238, 223, 0.74);
+    font-size: 1rem;
+  }
+  @media (max-width: 900px) {
+    .how__steps {
+      grid-template-columns: 1fr 1fr;
+      row-gap: 48px;
+    }
+    .how__road {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .how__steps {
+      grid-template-columns: 1fr;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      column-gap: 20px;
+    }
+    .step__badge {
+      grid-row: span 2;
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      margin: 0;
+    }
+  }
+</style>

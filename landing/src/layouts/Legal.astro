@@ -1,0 +1,67 @@
+---
+import Base from './Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+interface Props {
+  title: string;
+  updated: string;
+}
+const { title, updated } = Astro.props;
+---
+
+<Base title={title} noindex>
+  <Header />
+  <main class="legal">
+    <div class="container legal__inner">
+      <p class="eyebrow">Informations</p>
+      <h1>{title}</h1>
+      <p class="legal__date">Dernière mise à jour : {updated}</p>
+      <aside class="legal__warn" role="note">
+        <strong>Texte provisoire.</strong> Ce document doit être complété par le porteur du projet et validé par un
+        conseil juridique guinéen avant la mise en ligne.
+      </aside>
+      <div class="legal__body"><slot /></div>
+    </div>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .legal {
+    padding-block: clamp(40px, 7vw, 96px);
+  }
+  .legal__inner {
+    max-width: 780px;
+  }
+  h1 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    margin: 0.3em 0 0.2em;
+  }
+  .legal__date {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+  }
+  .legal__warn {
+    margin: 28px 0 40px;
+    padding: 16px 20px;
+    border-radius: var(--radius-m);
+    background: var(--bg-alt);
+    border-left: 6px solid var(--or);
+  }
+  .legal__body :global(h2) {
+    font-size: 1.6rem;
+    margin: 2.2em 0 0.6em;
+  }
+  .legal__body :global(p),
+  .legal__body :global(li) {
+    color: var(--ink-soft);
+    margin-bottom: 0.7em;
+  }
+  .legal__body :global(strong) {
+    color: var(--ink);
+  }
+  .legal__body :global(a) {
+    color: var(--accent);
+    font-weight: 600;
+  }
+</style>

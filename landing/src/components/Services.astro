@@ -1,0 +1,214 @@
+---
+import Icon from './Icon.astro';
+const services = [
+  {
+    icon: 'colis',
+    title: 'Colis',
+    text: "Un paquet à faire traverser la ville ? Indiquez le départ, l'arrivée et la taille : un livreur vient le chercher.",
+    tone: 'laterite',
+  },
+  {
+    icon: 'repas',
+    title: 'Repas',
+    text: "Commandez chez nos restaurants partenaires. Le livreur passe dès que votre commande est prête.",
+    tone: 'or',
+  },
+  {
+    icon: 'documents',
+    title: 'Documents',
+    text: 'Dossiers, contrats, plis : remis en main propre, avec une livraison confirmée à l\'arrivée.',
+    tone: 'card',
+  },
+  {
+    icon: 'achats',
+    title: 'Achats',
+    text: 'Vos achats chez nos commerces partenaires, livrés là où vous êtes.',
+    tone: 'card',
+  },
+  {
+    icon: 'marchandises',
+    title: 'Marchandises',
+    text: 'Cartons, stock, commandes de vos clients : la moto pour le léger, la voiture pour le volumineux.',
+    tone: 'vert',
+  },
+];
+---
+
+<section id="services" class="section services">
+  <div class="container">
+    <header class="services__head">
+      <div>
+        <p class="eyebrow reveal">Nos services</p>
+        <h2 class="section-title reveal" style="--d:80ms">Tout ce qui doit<br />bouger en ville.</h2>
+      </div>
+      <p class="lead reveal" style="--d:160ms">
+        Une seule application pour envoyer, recevoir et commander. Le véhicule s'adapte à ce que vous transportez : moto
+        ou voiture.
+      </p>
+    </header>
+
+    <ul class="services__grid">
+      {
+        services.map((s, i) => (
+          <li class={`card card--${s.tone} reveal`} style={`--d:${i * 90}ms`}>
+            <span class="card__icon">
+              <Icon name={s.icon} size={34} />
+            </span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+            <span class="card__num">0{i + 1}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .services {
+    padding-top: clamp(96px, 13vw, 170px);
+  }
+  .services__head {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px 48px;
+    align-items: end;
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+  .services__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 18px;
+  }
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-l);
+    padding: clamp(24px, 3vw, 36px);
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.4s var(--ease-out);
+  }
+  .card:hover {
+    transform: translateY(-6px) rotate(-0.4deg);
+  }
+  .card:nth-child(1) {
+    grid-column: span 3;
+  }
+  .card:nth-child(2) {
+    grid-column: span 3;
+  }
+  .card:nth-child(3),
+  .card:nth-child(4),
+  .card:nth-child(5) {
+    grid-column: span 2;
+  }
+  .card h3 {
+    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+    margin: auto 0 10px;
+  }
+  .card p {
+    color: var(--ink-soft);
+    max-width: 38ch;
+  }
+  .card__icon {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: var(--bg-alt);
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+  .card__num {
+    position: absolute;
+    top: 20px;
+    right: 26px;
+    font: 800 0.9rem/1 var(--font-display);
+    opacity: 0.45;
+  }
+  .card--laterite {
+    background: var(--laterite);
+    color: var(--sable);
+  }
+  .card--laterite p {
+    color: rgba(246, 238, 223, 0.86);
+  }
+  .card--laterite .card__icon {
+    background: rgba(246, 238, 223, 0.14);
+    color: var(--or);
+  }
+  .card--laterite::after,
+  .card--vert::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 55%;
+    opacity: 0.9;
+    pointer-events: none;
+    mask-image: linear-gradient(90deg, transparent, #000);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000);
+  }
+  .card--laterite::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cg fill='none' stroke='%23F6EEDF' stroke-opacity='.16' stroke-width='1.5'%3E%3Cpath d='M28 6 L50 28 L28 50 L6 28Z'/%3E%3Cpath d='M28 17 L39 28 L28 39 L17 28Z'/%3E%3C/g%3E%3C/svg%3E");
+  }
+  .card--or {
+    background: var(--or);
+    color: var(--nuit);
+  }
+  .card--or p {
+    color: rgba(14, 26, 36, 0.78);
+  }
+  .card--or .card__icon {
+    background: rgba(14, 26, 36, 0.1);
+    color: var(--laterite-deep);
+  }
+  .card--vert {
+    background: var(--vert);
+    color: var(--sable);
+  }
+  .card--vert p {
+    color: rgba(246, 238, 223, 0.86);
+  }
+  .card--vert .card__icon {
+    background: rgba(246, 238, 223, 0.14);
+    color: var(--or);
+  }
+  .card--vert::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L11 4 L22 18 L33 4 L44 18' fill='none' stroke='%23F6EEDF' stroke-opacity='.18' stroke-width='2'/%3E%3C/svg%3E");
+  }
+
+  @media (max-width: 900px) {
+    .services__head {
+      grid-template-columns: 1fr;
+    }
+    .services__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .card:nth-child(n) {
+      grid-column: span 1;
+    }
+    .card:nth-child(1),
+    .card:nth-child(5) {
+      grid-column: span 2;
+    }
+  }
+  @media (max-width: 560px) {
+    .services__grid {
+      grid-template-columns: 1fr;
+    }
+    .card:nth-child(n) {
+      grid-column: span 1;
+      min-height: 0;
+    }
+    .card__icon {
+      margin-bottom: 24px;
+    }
+  }
+</style>
