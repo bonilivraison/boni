@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { readdir, readFile, stat } from 'node:fs/promises';
 import { inscriptionSchema } from './inscription/schema.ts';
 import { enregistrer } from './inscription/store.ts';
 import { notifier } from './inscription/mailer.ts';
@@ -23,6 +24,27 @@ export function ipClient(xff: string | string[] | undefined, distante: string | 
     if (derniere) return derniere;
   }
   return distante || 'inconnue';
+}
+
+/**
+ * Résumé du stockage pour les journaux de démarrage, sans aucune donnée personnelle :
+ * volume monté ou non (FS Bucket), et nombre d'inscriptions par fichier.
+ */
+export async function etatStockage(dossier: string): Promise<string> {
+  try {
+    const [d, parent] = await Promise.all([stat(dossier), stat(path.dirname(dossier))]);
+    const monte = d.dev !== parent.dev;
+    const fichiers = (await readdir(dossier)).filter((f) => f.endsWith('.csv')).sort();
+    const comptes = await Promise.all(
+      fichiers.map(async (f) => {
+        const lignes = (await readFile(path.join(dossier, f), 'utf8')).split('\n').filter(Boolean).length;
+        return `${f}=${Math.max(0, lignes - 1)}`;
+      }),
+    );
+    return `${dossier} · volume monté : ${monte ? 'oui' : 'non'} · ${comptes.join(', ') || 'aucune inscription'}`;
+  } catch {
+    return `${dossier} · pas encore créé`;
+  }
 }
 
 export function configDepuisEnv(env: NodeJS.ProcessEnv = process.env): Config {

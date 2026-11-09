@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage } from 'node:http';
-import { configDepuisEnv, creerApp, ipClient } from './app.ts';
+import { configDepuisEnv, creerApp, etatStockage, ipClient } from './app.ts';
 
 const config = configDepuisEnv();
 const traiter = creerApp(config);
@@ -40,8 +40,9 @@ const serveur = createServer(async (req, res) => {
   }
 });
 
-serveur.listen(port, hote, () => {
+serveur.listen(port, hote, async () => {
   console.info(`API BoniLivraison sur http://${hote}:${port} · origines : ${config.origines.join(', ') || 'toutes'}`);
+  console.info(`[stockage] ${await etatStockage(config.dataDir)}`);
 });
 
 for (const sig of ['SIGTERM', 'SIGINT'] as const) process.on(sig, () => serveur.close(() => process.exit(0)));

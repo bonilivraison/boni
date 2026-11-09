@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { mkdtemp, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { configDepuisEnv, creerApp, ipClient, type Config } from './app.ts';
+import { configDepuisEnv, creerApp, etatStockage, ipClient, type Config } from './app.ts';
 
 const SITE = 'https://bonilivraison.github.io';
 const corps = {
@@ -111,5 +111,18 @@ describe('configuration', () => {
   });
   it('lit les origines autorisées', () => {
     expect(configDepuisEnv({ ALLOWED_ORIGINS: 'https://a.io, https://b.io' }).origines).toEqual(['https://a.io', 'https://b.io']);
+  });
+});
+
+describe('état du stockage', () => {
+  it('compte les inscriptions sans exposer de données', async () => {
+    const { traiter, dataDir } = await app();
+    await traiter(post(corps), '1.2.3.4');
+    const etat = await etatStockage(dataDir);
+    expect(etat).toContain('inscriptions-client.csv=1');
+    expect(etat).not.toContain('Aly');
+  });
+  it('signale un dossier absent', async () => {
+    expect(await etatStockage('/chemin/inexistant/data')).toContain('pas encore créé');
   });
 });
