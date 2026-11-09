@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage } from 'node:http';
-import { configDepuisEnv, creerApp } from './app.ts';
+import { configDepuisEnv, creerApp, ipClient } from './app.ts';
 
 const config = configDepuisEnv();
 const traiter = creerApp(config);
@@ -7,12 +7,7 @@ const port = Number(process.env.PORT ?? 8080);
 const hote = process.env.HOST ?? '0.0.0.0';
 const trustProxy = process.env.TRUST_PROXY === 'true';
 
-/** X-Forwarded-For n'est fiable que derrière notre propre reverse proxy. */
-function ipDe(req: IncomingMessage): string {
-  const xff = req.headers['x-forwarded-for'];
-  const premier = (Array.isArray(xff) ? xff[0] : xff)?.split(',')[0]?.trim();
-  return (trustProxy && premier) || req.socket.remoteAddress || 'inconnue';
-}
+const ipDe = (req: IncomingMessage) => ipClient(req.headers['x-forwarded-for'], req.socket.remoteAddress, trustProxy);
 
 const serveur = createServer(async (req, res) => {
   try {

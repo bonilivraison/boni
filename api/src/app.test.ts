@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { mkdtemp, readdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { creerApp, type Config } from './app.ts';
+import { configDepuisEnv, creerApp, ipClient, type Config } from './app.ts';
 
 const SITE = 'https://bonilivraison.github.io';
 const corps = {
@@ -85,5 +85,31 @@ describe('API inscription', () => {
     expect((await traiter(new Request('http://api.local/health'), 'x')).status).toBe(200);
     expect((await traiter(new Request('http://api.local/autre'), 'x')).status).toBe(404);
     expect((await traiter(new Request('http://api.local/api/inscription'), 'x')).status).toBe(405);
+  });
+});
+
+describe('IP du client', () => {
+  it('ignore X-Forwarded-For sans proxy de confiance', () => {
+    expect(ipClient('6.6.6.6', '10.0.0.1', false)).toBe('10.0.0.1');
+  });
+  it('prend la dernière entrée, ajoutée par le proxy, et non celle falsifiable du client', () => {
+    expect(ipClient('6.6.6.6, 41.77.1.2', '10.0.0.1', true)).toBe('41.77.1.2');
+    expect(ipClient(['6.6.6.6', '41.77.1.2'], '10.0.0.1', true)).toBe('41.77.1.2');
+  });
+  it("revient à l'adresse de la connexion si l'en-tête est absent", () => {
+    expect(ipClient(undefined, '10.0.0.1', true)).toBe('10.0.0.1');
+    expect(ipClient(undefined, undefined, true)).toBe('inconnue');
+  });
+});
+
+describe('configuration', () => {
+  it('résout DATA_DIR depuis APP_HOME (Clever Cloud)', () => {
+    expect(configDepuisEnv({ APP_HOME: '/home/bas/app_1', DATA_DIR: 'data' }).dataDir).toBe('/home/bas/app_1/data');
+  });
+  it('garde un DATA_DIR absolu tel quel', () => {
+    expect(configDepuisEnv({ APP_HOME: '/home/bas/app_1', DATA_DIR: '/data' }).dataDir).toBe('/data');
+  });
+  it('lit les origines autorisées', () => {
+    expect(configDepuisEnv({ ALLOWED_ORIGINS: 'https://a.io, https://b.io' }).origines).toEqual(['https://a.io', 'https://b.io']);
   });
 });

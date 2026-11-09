@@ -6,13 +6,13 @@ Ce dépôt contient la **landing page de pré-lancement** et son **API d'inscrip
 | Dossier | Rôle | Hébergement |
 |---|---|---|
 | [`landing/`](landing) | Site vitrine statique (Astro) | GitHub Pages : https://bonilivraison.github.io/boni/ |
-| [`api/`](api) | API d'inscription en TypeScript (Node 24) : validation, export CSV, e-mail | Serveur Docker, derrière Caddy (HTTPS) |
+| [`api/`](api) | API d'inscription en TypeScript (Node 24) : validation, export CSV, e-mail | Clever Cloud (Node.js + FS Bucket), ou Docker + Caddy |
 | [`docs/marque/`](docs/marque) | Charte de marque | — |
 
 ```
 navigateur ──► GitHub Pages (landing statique)
      │
-     └─ POST /api/inscription ──► Caddy (HTTPS) ──► api (Node) ──► CSV + e-mail SMTP
+     └─ POST /api/inscription ──► Clever Cloud (HTTPS) ──► api (Node) ──► CSV (FS Bucket) + e-mail Brevo
 ```
 
 ## Déployer le site
@@ -25,7 +25,39 @@ Pour relier le formulaire à l'API :
 
 Sans cette variable, le formulaire envoie les inscriptions par WhatsApp.
 
-## Déployer l'API sur un serveur
+## Déployer l'API sur Clever Cloud
+1. Dans la console Clever Cloud :
+   - créer une application **Node.js** (taille nano ou XS, **1 seule instance**) liée au dépôt GitHub `bonilivraison/boni`, branche `main` ; chaque push sur `main` la redéploie ;
+   - créer un add-on **FS Bucket** et le lier à l'application, puis noter son `BUCKET_HOST` ;
+   - chez **Brevo**, vérifier l'expéditeur et générer une clé SMTP.
+2. Déclarer les variables d'environnement de l'application :
+
+| Variable | Valeur |
+|---|---|
+| `APP_FOLDER` | `api` |
+| `CC_NODE_VERSION` | `24` |
+| `CC_NODE_BUILD_TOOL` | `npm-ci` |
+| `NODE_ENV` | `production` |
+| `CC_HEALTH_CHECK_PATH` | `/health` |
+| `CC_FS_BUCKET` | `/data:<BUCKET_HOST>` |
+| `DATA_DIR` | `data` (résolu depuis `APP_HOME`, donc dans le bucket) |
+| `ALLOWED_ORIGINS` | `https://bonilivraison.github.io` |
+| `TRUST_PROXY` | `true` |
+| `SMTP_HOST` / `SMTP_PORT` | `smtp-relay.brevo.com` / `587` |
+| `SMTP_USER` / `SMTP_PASS` | identifiant et clé SMTP Brevo |
+| `MAIL_FROM` | expéditeur vérifié chez Brevo |
+| `MAIL_TO` | destinataires des inscriptions |
+
+3. Vérifier que l'API répond : `curl https://<app>.cleverapps.io/health` doit renvoyer `{"ok":true}`.
+4. Brancher le site sur l'API :
+   ```bash
+   gh variable set PUBLIC_FORM_ENDPOINT -R bonilivraison/boni -b https://<app>.cleverapps.io/api/inscription
+   ```
+   puis relancer le workflow `pages.yml`.
+
+Les CSV se consultent avec `clever ssh`, dans le dossier `data/`.
+
+## Déployer l'API sur un serveur Docker (alternative)
 Prérequis : un serveur avec Docker, les ports 80 et 443 ouverts, et un sous-domaine qui pointe dessus.
 
 ```bash

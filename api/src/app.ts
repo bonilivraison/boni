@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { inscriptionSchema } from './inscription/schema.ts';
 import { enregistrer } from './inscription/store.ts';
 import { notifier } from './inscription/mailer.ts';
@@ -11,10 +12,24 @@ export interface Config {
   fenetreMs: number;
 }
 
+/**
+ * IP du client pour la limitation d'envois.
+ * Derrière un proxy de confiance (Clever Cloud, Caddy), on lit la DERNIÈRE entrée de X-Forwarded-For :
+ * c'est celle ajoutée par le proxy. Les précédentes viennent du client et peuvent être falsifiées.
+ */
+export function ipClient(xff: string | string[] | undefined, distante: string | undefined, trustProxy: boolean): string {
+  if (trustProxy && xff) {
+    const derniere = (Array.isArray(xff) ? xff.join(',') : xff).split(',').map((s) => s.trim()).filter(Boolean).at(-1);
+    if (derniere) return derniere;
+  }
+  return distante || 'inconnue';
+}
+
 export function configDepuisEnv(env: NodeJS.ProcessEnv = process.env): Config {
   return {
     origines: (env.ALLOWED_ORIGINS ?? '').split(',').map((s) => s.trim()).filter(Boolean),
-    dataDir: env.DATA_DIR ?? './data',
+    // Relatif : résolu depuis APP_HOME (racine de l'app sur Clever Cloud, où est monté le FS Bucket), sinon le dossier courant.
+    dataDir: path.resolve(env.APP_HOME ?? process.cwd(), env.DATA_DIR ?? 'data'),
     maxParFenetre: Number(env.RATE_LIMIT_MAX ?? 5),
     fenetreMs: Number(env.RATE_LIMIT_WINDOW_MS ?? 10 * 60 * 1000),
   };
